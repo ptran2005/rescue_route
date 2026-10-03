@@ -247,6 +247,8 @@ def fifo_match(donations, recipients, volunteers):
 
     while waiting_donations:
         donation = waiting_donations.popleft()
+        matched = False
+
         print("Processing donation:", donation["donation_id"])
 
         for recipient in recipients:
@@ -272,15 +274,34 @@ def fifo_match(donations, recipients, volunteers):
                         "reason":  reason
                     }
 
-                assignments.apparend(assignment)
+                    assignments.append(assignment)
 
-                remaining_capacity[recipient["recipient_id"]] -= donation["quantity"]
-                remaining_pickups[volunteer["volunteer_id"]] -= 1
+                    remaining_capacity[recipient["recipient_id"]] -= donation["quantity"]
+                    remaining_pickups[volunteer["volunteer_id"]] -= 1
 
-                print("Feasible:", feasible, "| Reason:", reason)
+                    matched = True
+                    break
+
+            if matched:
+                break
+
+        if not matched:
+            assignment = {
+                "donation_id": donation["donation_id"],
+                "recipient_id": None,
+                "volunteer_id": None,
+                "status": "unassigned",
+                "reason": "No feasible recipient and volunteer combination found"
+            }
+
+            assignments.append(assignment)
 
     return assignments
 
 if __name__ == "__main__":
     donations, recipients, volunteers = load_data("data/input_sample.json")
-    fifo_match(donations, recipients, volunteers)
+    assignments = fifo_match(donations, recipients, volunteers)
+
+    print("\n--- FIFO Assignments ---")
+    for assignment in assignments:
+        print(assignment)
