@@ -1,4 +1,5 @@
 import json
+from collections import deque
 
 def load_data(path):
     with open(path) as file:
@@ -25,3 +26,17 @@ def check_feasible_match(donation, recipient, volunteer, remaining_capacity, rem
         return False, "volunteer is not available in time"
     return True, "feasible"
 
+def fifo_match(donations, recipients, volunteers):
+    waiting_donations = deque(donations)
+    assignments = []
+
+    while waiting_donations:
+        donation = waiting_donations.popleft()
+        print("TESTING DONATIONS || Processing donation:", donation["donation_id"])
+
+    return assignments
+
+### Test code for FIFO
+donations, recipients, volunteers = load_data("data/input_sample.json")
+
+fifo_match(donations, recipients, volunteers)
