@@ -4,8 +4,10 @@ from rescue_route import check_feasible_match
 
 class TestFeasibleCheck(unittest.TestCase):
     def setUp(self):
-        self.donation - {
+        self.donation = {
             "donation_id": "D-1",
+            "donor_name": "Local Market",
+            "expiry_time": 180,
             "food_type": "produce",
             "quantity": 10,
             "pickup_area": "Fullerton",
@@ -29,28 +31,28 @@ class TestFeasibleCheck(unittest.TestCase):
         }
 
     def test_feasible_match(self):
-        ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 50, 4)
+        ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 50, 3)
         self.assertTrue(ok)
         self.assertEqual(reason, "feasible")
 
     def test_capacity_exceeded(self):
         ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 5, 3)
         self.assertFalse(ok)
-        self.assertEqual(reason, "passed capacity")
+        self.assertEqual(reason, "recipient capacity exceeded")
 
     def test_no_pickup_left(self):
         ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 50, 0)
         self.assertFalse(ok)
-        self.assertEqual(reason, "no more pickups left")
+        self.assertEqual(reason, "volunteer has no pickups left")
 
     def test_food_type_accepted(self):
         self.donation["food_type"] = "produce"
         ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 50, 2)
         self.assertTrue(ok)
-        self.assertEqual(reason, "food type accepted")
+        self.assertEqual(reason, "feasible")
 
     def test_vehicle_toosmall(self):
-        self.donation["quantity"] = 100
+        self.donation["quantity"] = 30
         ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 50, 3)
         self.assertFalse(ok)
-        self.assertEqual(reason, "vehicle is too small")
+        self.assertEqual(reason, "volunteer vehicle is too small")
