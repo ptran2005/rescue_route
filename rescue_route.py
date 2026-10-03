@@ -235,10 +235,49 @@ def check_feasible_match(donation, recipient, volunteer, remaining_capacity, rem
 def fifo_match(donations, recipients, volunteers):
     waiting_donations = deque(donations)
     assignments = []
+    remaining_capacity = {}
+    remaining_pickups = {}
+
+    for recipient in recipients:
+        remaining_capacity[recipient["recipient_id"]] = recipient["capacity"]
+
+    for volunteer in volunteers:
+        remaining_pickups[volunteer["volunteer_id"]] = volunteer["max_pickups"]
+
 
     while waiting_donations:
         donation = waiting_donations.popleft()
-        print("TESTING DONATIONS || Processing donation:", donation["donation_id"])
+        print("Processing donation:", donation["donation_id"])
+
+        for recipient in recipients:
+            print("Checking recipient:", recipient["recipient_id"])
+
+            for volunteer in volunteers:
+                print("Checking volunteer:", volunteer["volunteer_id"])
+
+                feasible, reason = check_feasible_match(
+                    donation,
+                    recipient,
+                    volunteer,
+                    remaining_capacity[recipient["recipient_id"]],
+                    remaining_pickups[volunteer["volunteer_id"]],
+                )
+
+                if feasible:
+                    assignment = {
+                        "donation_id": donation["donation_id"],
+                        "recipient_id": recipient["recipient_id"],
+                        "volunteer_id": volunteer["volunteer_id"],
+                        "status": "assigned",
+                        "reason":  reason
+                    }
+
+                assignments.apparend(assignment)
+
+                remaining_capacity[recipient["recipient_id"]] -= donation["quantity"]
+                remaining_pickups[volunteer["volunteer_id"]] -= 1
+
+                print("Feasible:", feasible, "| Reason:", reason)
 
     return assignments
 
