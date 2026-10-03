@@ -298,10 +298,31 @@ def fifo_match(donations, recipients, volunteers):
 
     return assignments
 
+def donation_expiry(donation):
+    return donation["expiry_time"]
+
+def greedy_match(donations, recipients, volunteers):
+    pending_donations = list(donations)
+
+    pending_donations.sort(key=donation_expiry)
+
+    for donation in pending_donations:
+        print(
+            "Greedy processing donation:",
+            donation["donation_id"],
+            "| Expiry:",
+            donation["expiry_time"]
+        )
+
+
 if __name__ == "__main__":
     donations, recipients, volunteers = load_data("data/input_sample.json")
+    
     assignments = fifo_match(donations, recipients, volunteers)
 
     print("\n--- FIFO Assignments ---")
     for assignment in assignments:
         print(assignment)
+
+    print("\n--- Greedy Processing Order ---")
+    greedy_match(donations, recipients, volunteers)
