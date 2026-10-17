@@ -1,13 +1,13 @@
 import unittest
 
-from rescue_route import (
+from rescue_route import ( # importing functions from rescue_route.py to automate tests
     check_feasible_match,
     fifo_match,
     greedy_match,
     validate_donations,
     validate_data
 )
-
+# Create example donation
 def make_donation(donation_id="D-1", food_type="produce", quantity=10, expiry_time=200, ready_time=0, pickup_area="Fullerton", donor_name="locals"):
     return {
         "donation_id": donation_id,
@@ -18,6 +18,7 @@ def make_donation(donation_id="D-1", food_type="produce", quantity=10, expiry_ti
         "pickup_area": pickup_area,
         "ready_time": ready_time
     }
+# Create example recipient
 def make_recipient(recipient_id="R-1", accepted=None, capacity=50, area="Fullerton", closing_time=300, organization_name="Shelter"):
     return {
         "recipient_id": recipient_id,
@@ -27,6 +28,7 @@ def make_recipient(recipient_id="R-1", accepted=None, capacity=50, area="Fullert
         "area": area,
         "closing_time": closing_time
     }
+# Create example volunteer
 def make_volunteer(volunteer_id="V-1", vehicle_capacity=20, area="Fullerton", availability_start=0, availability_end=300, max_pickups=3,):
     return {
         "volunteer_id": volunteer_id,
@@ -36,7 +38,7 @@ def make_volunteer(volunteer_id="V-1", vehicle_capacity=20, area="Fullerton", av
         "availability_end": availability_end,
         "max_pickups": max_pickups,
     }
-
+# Start of first test
 class TestFeasibleCheck(unittest.TestCase):
     def setUp(self):
         self.donation = {
@@ -65,53 +67,53 @@ class TestFeasibleCheck(unittest.TestCase):
             "max_pickups": 3
         }
 
-    def test_feasible_match(self):
+    def test_feasible_match(self):  # Check if theres a match with donation + recipient + volunteer
         ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 50, 3)
         self.assertTrue(ok)
         self.assertEqual(reason, "feasible")
 
-    def test_capacity_exceeded(self):
+    def test_capacity_exceeded(self): # Check if remaining donations is less than given quantity
         ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 5, 3)
         self.assertFalse(ok)
         self.assertEqual(reason, "recipient capacity exceeded")
 
-    def test_no_pickup_left(self):
+    def test_no_pickup_left(self): # Check if it will reject when theres 0 pickups left
         ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 50, 0)
         self.assertFalse(ok)
         self.assertEqual(reason, "volunteer has no pickups left")
 
-    def test_food_type_accepted(self):
+    def test_food_type_accepted(self):  # Trial match food type
         self.donation["food_type"] = "produce"
         ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 50, 2)
         self.assertTrue(ok)
         self.assertEqual(reason, "feasible")
 
-    def test_vehicle_toosmall(self):
+    def test_vehicle_toosmall(self):    # Check small vehicle
         self.donation["quantity"] = 30
         ok, reason = check_feasible_match(self.donation, self.recipient, self.volunteer, 50, 3)
         self.assertFalse(ok)
         self.assertEqual(reason, "volunteer vehicle is too small")
 
 class TestValidation(unittest.TestCase):
-    def test_duplicate_donation_id(self):
+    def test_duplicate_donation_id(self):   # Check for duplicated id
         donations = [
               make_donation(donation_id="D-1"),
               make_donation(donation_id="D-1"),
         ]
         with self.assertRaises(ValueError):
             validate_donations(donations)
-    def test_empty_lists_valid(self):
+    def test_empty_lists_valid(self):   # Check if the list is empty
             validate_data({"donations": [], "recipients": [], "volunteers": []})
 
 class TestFeasibleRejection(unittest.TestCase):
-    def test_expired_donation(self):
+    def test_expired_donation(self):    # check if this will reject when food is expired
         donation = make_donation(expiry_time=0, ready_time=0)
         recipient = make_recipient()
         volunteer = make_volunteer()
         ok, reason = check_feasible_match(donation, recipient, volunteer, 50, 3)
         self.assertFalse(ok)
         self.assertEqual(reason, "donation expires before pickup can be completed")
-    def test_food_type_not_accepted(self):
+    def test_food_type_not_accepted(self):  # check if this will reject if mismatch food type
         donation = make_donation(food_type= "meat")
         recipient = make_recipient(accepted=["produce"])
         volunteer = make_volunteer()
@@ -120,7 +122,7 @@ class TestFeasibleRejection(unittest.TestCase):
         self.assertEqual(reason, "recipient does not accept meat")
 
 class TestStrategies(unittest.TestCase):
-    def test_two_donations_comp_for_cap(self):
+    def test_two_donations_comp_for_cap(self): # check if fifo is following the algorithm order correctly
         donations = [
             make_donation(donation_id="D-1", quantity=10),
             make_donation(donation_id="D-2", quantity=10)
@@ -133,10 +135,10 @@ class TestStrategies(unittest.TestCase):
 
         self.assertEqual(statuses["D-1"], "assigned")
         self.assertEqual(statuses["D-2"], "unassigned")
-    def test_fifo_empty_donations(self):
+    def test_fifo_empty_donations(self):    # No donation = empty list
         assignments = fifo_match([], [make_recipient()], [make_volunteer()])
         self.assertEqual(assignments, [])
-    def test_fifo_vs_greedy_dif(self):
+    def test_fifo_vs_greedy_dif(self):  # Check if fifo will keep d-1 as first and greedy will keep d-2 as first based on their implemented algorithm
         donation_early = make_donation(donation_id= "D-1", expiry_time=250, quantity=10)
         donation_urgent = make_donation(donation_id= "D-2", expiry_time=50, quantity=10)
         recipient = make_recipient(capacity=10)
@@ -151,7 +153,7 @@ class TestStrategies(unittest.TestCase):
         self.assertEqual(assigned_fifo, "D-1")  #arrive order
         self.assertEqual(assigned_greedy, "D-2")    #urgent first
         self.assertNotEqual(assigned_fifo, assigned_greedy)
-    def test_greedy_fairness_starvation(self):
+    def test_greedy_fairness_starvation(self):  # Check urgency 
         slow_donation = make_donation(donation_id= "D-s", expiry_time=500, quantity=10)
         urgent1_donation = make_donation(donation_id= "D-u1", expiry_time=30, quantity=10)
         urgent2_donation = make_donation(donation_id= "D-u2", expiry_time=40, quantity=10)
@@ -164,7 +166,7 @@ class TestStrategies(unittest.TestCase):
 
         self.assertEqual(status["D-u1"], "assigned")
         self.assertEqual(status["D-s"], "unassigned")
-    def test_greedy_quantity_priority(self):
+    def test_greedy_quantity_priority(self):    #
         donations = [
             make_donation(donation_id="D-1", quantity=5, expiry_time=100),
             make_donation(donation_id="D-2", quantity=10, expiry_time=100)
