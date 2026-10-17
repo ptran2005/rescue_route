@@ -1,6 +1,5 @@
 import json
 from collections import deque 
-import heapq
 
 #Validate Donations
 def validate_donations(donations):
