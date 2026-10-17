@@ -80,7 +80,7 @@ urgent_rescue_rate : 75.0
 # Team contribution
 - **Phat Tran** - Product & Quality Lead: Worked on validations, data, and output.
 - **Kevin Lam** - Data matching & Test lead: Started the data checks as well as implementing the automated tests for the program
-- **Name** 
+- **Eduardo Perez** -  Algorithm & Optimization Lead: Worked on the FIFO and Greedy schedulers as well as the metric calculations and algorithm comparisons
 
 # AI usage
 - chatGPT (openAI) was used during the preparation of this project to generate sample input data, including donations, recipients, and volunteers, to be tested by the algorithms. All AI-generated data was reviewed by the group. The algorithms and implementation are the original work of the group.
