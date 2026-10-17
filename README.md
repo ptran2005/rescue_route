@@ -64,7 +64,7 @@ Greedy follows the rule of soonest food to expire. Although it is not fully opti
 
 # Team contribution
 **Name**
-**Kevin Lam** - Matching & Test lead
+**Kevin Lam** - Matching & Test lead 
 **Name** 
 
 # AI usage
