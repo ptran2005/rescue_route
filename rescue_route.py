@@ -397,14 +397,131 @@ def greedy_match(donations, recipients, volunteers):
 def greedy_priority(donation):
     return (donation["expiry_time"], -donation["quantity"], donation["ready_time"])
 
+def calculate_metrics(donations, recipients, volunteers, assignments):
+    metrics = {
+        "donations_received": len(donations),
+        "donations_assigned": 0,
+        "donations_unassigned": 0,
+        "food_quantity_rescued": 0,
+        "food_quantity_at_risk": 0
+    }
+
+    for assignment in assignments:
+        donation = next(
+            (d for d in donations
+             if d["donation_id"] == assignment["donation_id"]),
+            None
+        )
+
+        if donation is None:
+            continue
+
+        if assignment["status"] == "assigned":
+            metrics["donations_assigned"] += 1
+            metrics["food_quantity_rescued"] += donation["quantity"]
+
+        elif assignment["status"] == "unassigned":
+            metrics["donations_unassigned"] += 1
+            metrics["food_quantity_at_risk"] += donation["quantity"]
+
+    total_capacity = sum(r["capacity"] for r in recipients)
+
+    if total_capacity > 0:
+        metrics["recipient_capacity_utilization"] = (
+            metrics["food_quantity_rescued"] / total_capacity * 100
+        )
+    else:
+        metrics["recipient_capacity_utilization"] = 0
+
+    total_volunteer_capacity = sum(
+        v["vehicle_capacity"] * v["max_pickups"]
+        for v in volunteers
+    )
+
+    if total_volunteer_capacity > 0:
+        metrics["volunteer_capacity_utilization"] = (
+            metrics["food_quantity_rescued"]
+            / total_volunteer_capacity * 100
+        )
+    else:
+        metrics["volunteer_capacity_utilization"] = 0
+
+    remaining_donations = donations.copy()
+    urgent_assignments = 0
+
+    for assignment in assignments:
+        if not remaining_donations:
+            break
+
+        earliest_donation = min(
+            remaining_donations,
+            key=lambda d: d["expiry_time"]
+        )
+
+        current_donation = next(
+            (d for d in remaining_donations
+             if d["donation_id"] == assignment["donation_id"]),
+            None
+        )
+
+        if current_donation is None:
+            continue
+
+        if (assignment["status"] == "assigned"
+                and current_donation["expiry_time"] == earliest_donation["expiry_time"]):
+            urgent_assignments += 1
+
+        remaining_donations = [
+            d for d in remaining_donations
+            if d["donation_id"] != assignment["donation_id"]
+        ]
+
+    if metrics["donations_assigned"] > 0:
+        metrics["urgent_rescue_rate"] = (
+            urgent_assignments / metrics["donations_assigned"] * 100
+        )
+    else:
+        metrics["urgent_rescue_rate"] = 0
+
+    return metrics
+
+def compare_metrics(fifo_metrics, greedy_metrics):
+    comparison = {}
+
+    for metric in fifo_metrics:
+        comparison[metric] = greedy_metrics[metric] - fifo_metrics[metric]
+
+    return comparison
+
 if __name__ == "__main__":
     donations, recipients, volunteers = load_data("data/input_sample.json")
     
-    assignments = fifo_match(donations, recipients, volunteers)
+    fifo_assignments = fifo_match(donations, recipients, volunteers)
 
     print("\n--- FIFO Assignments ---")
-    for assignment in assignments:
+    for assignment in fifo_assignments:
         print(assignment)
 
-    print("\n--- Greedy Processing Order ---")
-    greedy_match(donations, recipients, volunteers)
+    fifo_metrics = calculate_metrics(donations, recipients, volunteers, fifo_assignments)
+
+    print("\n--- FIFO Metrics ---")
+    for metric, value in fifo_metrics.items():
+        print(metric, ":", value)
+
+    greedy_assignments = greedy_match(donations, recipients, volunteers)
+
+    print("\n--- Greedy Assignments ---")
+    for assignment in greedy_assignments:
+        print(assignment)
+
+    greedy_metrics = calculate_metrics(donations, recipients, volunteers, greedy_assignments)
+
+    print("\n--- Greedy Metrics ---")
+    for metric, value in greedy_metrics.items():
+        print(metric, ":", value)
+
+    comparison = compare_metrics(fifo_metrics, greedy_metrics)
+
+    print("\n--- FIFO vs Greedy Comparison ---")
+    for metric, difference in comparison.items():
+        print(metric, ":", difference)
