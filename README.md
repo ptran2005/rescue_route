@@ -63,7 +63,7 @@ Greedy follows the rule of soonest food to expire. Although it is not fully opti
 -
 
 # Team contribution
-- **Name**
+- **Phat Tran** - Product & Quality Lead: Worked on validations, data, and output.
 - **Kevin Lam** - Data matching & Test lead: Started the data checks as well as implementing the automated tests for the program
 - **Name** 
 
