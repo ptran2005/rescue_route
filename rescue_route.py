@@ -1,5 +1,6 @@
 import json
-from collections import deque
+from collections import deque 
+import heapq
 
 def validate_donations(donations):
     if not isinstance(donations, list):
@@ -298,22 +299,71 @@ def fifo_match(donations, recipients, volunteers):
 
     return assignments
 
-def donation_expiry(donation):
-    return donation["expiry_time"]
-
 def greedy_match(donations, recipients, volunteers):
-    pending_donations = list(donations)
+    waiting_donations = deque(sorted(donations, key=greedy_priority))
+  
+    assignments = []
+    remaining_capacity = {}
+    remaining_pickups = {}
+  
+    for recipient in recipients:
+        remaining_capacity[recipient["recipient_id"]] = recipient["capacity"]
 
-    pending_donations.sort(key=donation_expiry)
+    for volunteer in volunteers:
+        remaining_pickups[volunteer["volunteer_id"]] = volunteer["max_pickups"]
 
-    for donation in pending_donations:
-        print(
-            "Greedy processing donation:",
-            donation["donation_id"],
-            "| Expiry:",
-            donation["expiry_time"]
-        )
+    while waiting_donations:
+        donation = waiting_donations.popleft()
+        matched = False
 
+        print("Greedy processing donation:", donation["donation_id"], "| Expiry:", donation["expiry_time"])
+
+        for recipient in recipients:
+            for volunteer in volunteers:
+                feasible, reason = check_feasible_match(
+                    donation,
+                    recipient,
+                    volunteer,
+                    remaining_capacity[recipient["recipient_id"]],
+                    remaining_pickups[volunteer["volunteer_id"]],
+                )
+
+                if feasible:
+                    assignment = {
+                        "donation_id": donation["donation_id"],
+                        "recipient_id": recipient["recipient_id"],
+                        "volunteer_id": volunteer["volunteer_id"],
+                        "status": "assigned",
+                        "reason": reason,
+                    }
+
+                    assignments.append(assignment)
+
+                    remaining_capacity[recipient["recipient_id"]] -= donation["quantity"]
+                    remaining_pickups[volunteer["volunteer_id"]] -= 1
+
+                    matched = True
+                    break
+
+            if matched:
+                break
+
+        if not matched:
+            assignment = {
+                "donation_id": donation["donation_id"],
+                "recipient_id": None,
+                "volunteer_id": None,
+                "status": "unassigned",
+                "reason": "No feasible recipient and volunteer combination found",
+            }
+
+            assignments.append(assignment)
+
+    return assignments
+
+
+def greedy_priority(donation):
+    return (donation["expiry_time"], -donation["quantity"], donation["ready_time"])
 
 if __name__ == "__main__":
     donations, recipients, volunteers = load_data("data/input_sample.json")
