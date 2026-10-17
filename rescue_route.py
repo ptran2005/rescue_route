@@ -1,14 +1,15 @@
 import json
 from collections import deque
 
+#Validate Donations
 def validate_donations(donations):
     if not isinstance(donations, list):
-        raise ValueError("donations must be a list.")
+        raise ValueError("Donations must be a list.")
 
     seen_ids = set()
     for donation in donations:
         if not isinstance(donation, dict):
-            raise ValueError("Each donation must be an object.")
+            raise ValueError("Donation must be an object.")
         for field in (
             "donation_id",
             "donor_name",
@@ -19,9 +20,9 @@ def validate_donations(donations):
             "ready_time",
         ):
             if field not in donation:
-                raise ValueError(f"Each donation is missing {field}.")
+                raise ValueError(f"Donation is missing {field}.")
         if len(donation) != 7:
-            raise ValueError("Each donation must contain exactly 7 fields.")
+            raise ValueError("Donation must contain exactly 7 fields.")
 
         donation_id = donation["donation_id"]
         donor_name = donation["donor_name"]
@@ -32,17 +33,17 @@ def validate_donations(donations):
         ready_time = donation["ready_time"]
 
         if not isinstance(donation_id, str) or not donation_id.strip():
-            raise ValueError(f"Each donation must have a nonempty donation_id.")
+            raise ValueError("Donation must have a nonempty donation_id.")
 
         if donation_id in seen_ids:
             raise ValueError(f"Duplicate donation ID: {donation_id}")
         seen_ids.add(donation_id)
 
         if not isinstance(donor_name, str) or not donor_name.strip():
-            raise ValueError(f"Each donation must have a nonempty donor_name.")
+            raise ValueError(f"Donation must have a nonempty donor_name.")
 
         if not isinstance(food_type, str) or not food_type.strip():
-            raise ValueError(f"Each donation must have a nonempty food_type.")
+            raise ValueError(f"Donation must have a nonempty food_type.")
 
         if not isinstance(quantity, int) or isinstance(quantity, bool) or quantity <= 0:
             raise ValueError(
@@ -55,22 +56,22 @@ def validate_donations(donations):
             )
 
         if not isinstance(pickup_area, str) or not pickup_area.strip():
-            raise ValueError(f"Each donation must have a nonempty pickup_area.")
+            raise ValueError(f"Donation must have a nonempty pickup_area.")
 
         if not isinstance(ready_time, int) or isinstance(ready_time, bool) or ready_time < 0:
             raise ValueError(
                 f"Donation {donation_id} must have a non-negative integer ready_time."
             )
 
-
+#Validate Recipients
 def validate_recipients(recipients):
     if not isinstance(recipients, list):
-        raise ValueError("recipients must be a list.")
+        raise ValueError("Recipients must be a list.")
 
     seen_ids = set()
     for recipient in recipients:
         if not isinstance(recipient, dict):
-            raise ValueError("Each recipient must be an object.")
+            raise ValueError("Recipient must be an object.")
         for field in (
             "recipient_id",
             "organization_name",
@@ -80,9 +81,9 @@ def validate_recipients(recipients):
             "closing_time",
         ):
             if field not in recipient:
-                raise ValueError(f"Each recipient is missing {field}.")
+                raise ValueError(f"Recipient is missing {field}.")
         if len(recipient) != 6:
-            raise ValueError("Each recipient must contain exactly 6 fields.")
+            raise ValueError("Recipient must contain exactly 6 fields.")
 
         recipient_id = recipient["recipient_id"]
         organization_name = recipient["organization_name"]
@@ -92,17 +93,17 @@ def validate_recipients(recipients):
         closing_time = recipient["closing_time"]
 
         if not isinstance(recipient_id, str) or not recipient_id.strip():
-            raise ValueError(f"Each recipient must have a nonempty recipient_id.")
+            raise ValueError(f"Recipient must have a nonempty recipient_id.")
 
         if recipient_id in seen_ids:
             raise ValueError(f"Duplicate recipient ID: {recipient_id}")
         seen_ids.add(recipient_id)
 
         if not isinstance(organization_name, str) or not organization_name.strip():
-            raise ValueError(f"Each recipient must have a nonempty organization_name.")
+            raise ValueError(f"Recipient must have a nonempty organization_name.")
 
         if not isinstance(accepted_food_types, list):
-            raise ValueError("accepted_food_types must be a list.")
+            raise ValueError("Accepted_food_types must be a list.")
         for food_type in accepted_food_types:
             if not isinstance(food_type, str) or not food_type.strip():
                 raise ValueError("Accepted food types must be nonempty strings.")
@@ -113,22 +114,22 @@ def validate_recipients(recipients):
             )
 
         if not isinstance(area, str) or not area.strip():
-            raise ValueError(f"Each recipient must have a nonempty area.")
+            raise ValueError(f"Recipient must have a nonempty area.")
 
         if not isinstance(closing_time, int) or isinstance(closing_time, bool) or closing_time < 0:
             raise ValueError(
                 f"Recipient {recipient_id} must have a non-negative integer closing_time."
             )
 
-
+#Validate Volunteers
 def validate_volunteers(volunteers):
     if not isinstance(volunteers, list):
-        raise ValueError("volunteers must be a list.")
+        raise ValueError("Volunteers must be a list.")
 
     seen_ids = set()
     for volunteer in volunteers:
         if not isinstance(volunteer, dict):
-            raise ValueError("Each volunteer must be an object.")
+            raise ValueError("Volunteer must be an object.")
         for field in (
             "volunteer_id",
             "vehicle_capacity",
@@ -138,9 +139,9 @@ def validate_volunteers(volunteers):
             "max_pickups",
         ):
             if field not in volunteer:
-                raise ValueError(f"Each volunteer is missing {field}.")
+                raise ValueError(f"Volunteer is missing {field}.")
         if len(volunteer) != 6:
-            raise ValueError("Each volunteer must contain exactly 6 fields.")
+            raise ValueError("Volunteer must contain exactly 6 fields.")
 
         volunteer_id = volunteer["volunteer_id"]
         vehicle_capacity = volunteer["vehicle_capacity"]
@@ -150,7 +151,7 @@ def validate_volunteers(volunteers):
         max_pickups = volunteer["max_pickups"]
 
         if not isinstance(volunteer_id, str) or not volunteer_id.strip():
-            raise ValueError(f"Each volunteer must have a nonempty volunteer_id.")
+            raise ValueError(f"Volunteer must have a nonempty volunteer_id.")
 
         if volunteer_id in seen_ids:
             raise ValueError(f"Duplicate volunteer ID: {volunteer_id}")
@@ -162,7 +163,7 @@ def validate_volunteers(volunteers):
             )
 
         if not isinstance(area, str) or not area.strip():
-            raise ValueError(f"Each volunteer must have a nonempty area.")
+            raise ValueError(f"Volunteer must have a nonempty area.")
 
         if not isinstance(availability_start, int) or isinstance(availability_start, bool) or availability_start < 0:
             raise ValueError(
@@ -180,20 +181,51 @@ def validate_volunteers(volunteers):
             )
 
         if availability_start > availability_end:
-            raise ValueError("availability_start must not exceed availability_end.")
+            raise ValueError("Availability_start must not exceed availability_end.")
+
+#Print record errors and keep only valid records, in input order.
+def validate_records(records, validator, id_field, label):
+    if not isinstance(records, list):
+        raise ValueError(f"{label} must be a list.")
+
+    valid_records = []
+    seen_ids = set()
+    for position, record in enumerate(records, start=1):
+        try:
+            validator([record])
+            record_id = record[id_field]
+            if record_id in seen_ids:
+                raise ValueError(f"Duplicate {id_field}: {record_id}")
+        except ValueError as error:
+            print(f"Error in {label} record {position}: {error} Skipping record.")
+            continue
+
+        seen_ids.add(record_id)
+        valid_records.append(record)
+
+    return valid_records
 
 
+#Validate input; expired donations remain valid for explained rejection.
 def validate_data(data):
-    """Validate input; expired donations remain valid for explained rejection."""
     if not isinstance(data, dict):
         raise ValueError("Input must be a JSON object.")
     for collection in ("donations", "recipients", "volunteers"):
         if collection not in data:
             raise ValueError(f"Input is missing {collection}.")
 
-    validate_donations(data["donations"])
-    validate_recipients(data["recipients"])
-    validate_volunteers(data["volunteers"])
+#Return valid records; print and skip invalid individual records.
+    return {
+        "donations": validate_records(
+            data["donations"], validate_donations, "donation_id", "donations"
+        ),
+        "recipients": validate_records(
+            data["recipients"], validate_recipients, "recipient_id", "recipients"
+        ),
+        "volunteers": validate_records(
+            data["volunteers"], validate_volunteers, "volunteer_id", "volunteers"
+        ),
+    }
 
 
 def load_data(path):
@@ -202,7 +234,7 @@ def load_data(path):
             data = json.load(file)
         except json.JSONDecodeError as error:
             raise ValueError(f"Invalid JSON in {path}: {error.msg}") from error
-    validate_data(data)
+    data = validate_data(data)
     donations = data["donations"]
     recipients = data["recipients"]
     volunteers = data["volunteers"]
