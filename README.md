@@ -1,5 +1,5 @@
 CPSC 335: Algorithms and Data Structures
-- RescueRoute -
+- RescueRoute
 - GITHUB URL: [https://github.com/ptran2005/rescue_route](url)
 
 This is a python commandline project that matches time-sensitive surplus food donations to compatible recipients and volunteer drivers. It uses a fifo algorithm as well as a greedy algorithm to compare and make decision for all donations. 
