@@ -287,13 +287,8 @@ def fifo_match(donations, recipients, volunteers):
         if not volunteers:
             rejection_reasons.append("no volunteers were provided")
 
-        print("Processing donation:", donation["donation_id"])
-
         for recipient in recipients:
-            print("Checking recipient:", recipient["recipient_id"])
-
             for volunteer in volunteers:
-                print("Checking volunteer:", volunteer["volunteer_id"])
 
                 feasible, reason = check_feasible_match(
                     donation,
@@ -373,8 +368,6 @@ def greedy_match(donations, recipients, volunteers):
             rejection_reasons.append("no recipients were provided")
         if not volunteers:
             rejection_reasons.append("no volunteers were provided")
-
-        print("Greedy processing donation:", donation["donation_id"], "| Expiry:", donation["expiry_time"])
 
         for recipient in recipients:
             for volunteer in volunteers:
