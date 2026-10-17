@@ -63,9 +63,9 @@ Greedy follows the rule of soonest food to expire. Although it is not fully opti
 -
 
 # Team contribution
-**Name**
-**Kevin Lam** - Matching & Test lead
-**Name** 
+- **Name**
+- **Kevin Lam** - Matching & Test lead
+- **Name** 
 
 # AI usage
 - chatGPT (openAI) was used during the preparation of this project to generate sample input data, including donations, recipients, and volunteers, to be tested by the algorithms. All AI-generated data was reviewed by the group. The algorithms and implementation are the original work of the group.
