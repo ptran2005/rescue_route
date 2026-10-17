@@ -60,7 +60,8 @@ Greedy follows the rule of soonest food to expire. Although it is not fully opti
 # Metrics & FIFO vs Greedy comparison
 - FIFO processes donations in their original JSON list order, which represents arrival order. For each donation, it selects the first recipient-volunteer combination that passes the feasibility checks. Earlier donations receive access to capacity first.
 - Greedy sorts donations by earliest expiration, then larger quantity, then earlier ready time. Donations tied on all three criteria retain their input order. After sorting, it uses the same first-feasible matching procedure as FIFO. Its local goal is to prioritize food with less time before expiration; it does not guarantee the greatest total rescued quantity.
---- FIFO vs Greedy Comparison ---
+
+FIFO vs Greedy Comparison
 donations_received : 0
 donations_assigned : 0
 donations_unassigned : 0
@@ -69,6 +70,7 @@ food_quantity_at_risk : 0
 recipient_capacity_utilization : 0.0
 volunteer_capacity_utilization : 0.0
 urgent_rescue_rate : 75.0
+
 - Each difference is calculated as Greedy − FIFO. A negative value means FIFO’s value was higher; a positive value means Greedy’s value was higher. Higher values are not always better—for example, less food at risk is preferable.
 - Both algorithms assigned 8 donations and rescued 90 units, producing zero differences for those metrics. However, they selected different donations, with greedy prioritizing earlier expiration.
 - In this urgent rescue rate, the score is 75, which means Greedy was 75% higher than FIFO.
