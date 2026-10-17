@@ -282,6 +282,12 @@ def fifo_match(donations, recipients, volunteers):
         donation = waiting_donations.popleft()
         matched = False
 
+        rejection_reasons = []
+        if not recipients:
+            rejection_reasons.append("no recipients were provided")
+        if not volunteers:
+            rejection_reasons.append("no volunteers were provided")
+
         print("Processing donation:", donation["donation_id"])
 
         for recipient in recipients:
@@ -298,13 +304,27 @@ def fifo_match(donations, recipients, volunteers):
                     remaining_pickups[volunteer["volunteer_id"]],
                 )
 
+                if not feasible:
+                    if reason not in rejection_reasons:
+                        rejection_reasons.append(reason)
+                    continue
+
                 if feasible:
+                    scheduled_time = max( donation["ready_time"], volunteer["availability_start"])
                     assignment = {
                         "donation_id": donation["donation_id"],
                         "recipient_id": recipient["recipient_id"],
                         "volunteer_id": volunteer["volunteer_id"],
+                        "scheduled_time": scheduled_time,
                         "status": "assigned",
-                        "reason":  reason
+                        "reason": (
+                            f"Donation {donation['donation_id']} was assigned to "
+                            f"{recipient['organization_name']} with volunteer "
+                            f"{volunteer['volunteer_id']} because it expires in "
+                            f"{donation['expiry_time'] - scheduled_time} minutes at pickup, "
+                            f"the recipient accepts {donation['food_type'].replace('_', ' ')}, "
+                            "capacity is available, and the volunteer can carry the quantity."
+                        )
                     }
 
                     assignments.append(assignment)
@@ -323,8 +343,9 @@ def fifo_match(donations, recipients, volunteers):
                 "donation_id": donation["donation_id"],
                 "recipient_id": None,
                 "volunteer_id": None,
+                "scheduled_time": None,
                 "status": "unassigned",
-                "reason": "No feasible recipient and volunteer combination found"
+                "reason": "; ".join(rejection_reasons),
             }
 
             assignments.append(assignment)
@@ -348,6 +369,12 @@ def greedy_match(donations, recipients, volunteers):
         donation = waiting_donations.popleft()
         matched = False
 
+        rejection_reasons = []
+        if not recipients:
+            rejection_reasons.append("no recipients were provided")
+        if not volunteers:
+            rejection_reasons.append("no volunteers were provided")
+
         print("Greedy processing donation:", donation["donation_id"], "| Expiry:", donation["expiry_time"])
 
         for recipient in recipients:
@@ -360,13 +387,27 @@ def greedy_match(donations, recipients, volunteers):
                     remaining_pickups[volunteer["volunteer_id"]],
                 )
 
+                if not feasible:
+                    if reason not in rejection_reasons:
+                        rejection_reasons.append(reason)
+                    continue
+                
                 if feasible:
+                    scheduled_time = max( donation["ready_time"], volunteer["availability_start"])
                     assignment = {
                         "donation_id": donation["donation_id"],
                         "recipient_id": recipient["recipient_id"],
                         "volunteer_id": volunteer["volunteer_id"],
+                        "scheduled_time": scheduled_time,
                         "status": "assigned",
-                        "reason": reason,
+                        "reason": (
+                            f"Donation {donation['donation_id']} was assigned to "
+                            f"{recipient['organization_name']} with volunteer "
+                            f"{volunteer['volunteer_id']} because it expires in "
+                            f"{donation['expiry_time'] - scheduled_time} minutes at pickup, "
+                            f"the recipient accepts {donation['food_type'].replace('_', ' ')}, "
+                            "capacity is available, and the volunteer can carry the quantity."
+                        )
                     }
 
                     assignments.append(assignment)
@@ -385,8 +426,9 @@ def greedy_match(donations, recipients, volunteers):
                 "donation_id": donation["donation_id"],
                 "recipient_id": None,
                 "volunteer_id": None,
+                "scheduled_time": None,
                 "status": "unassigned",
-                "reason": "No feasible recipient and volunteer combination found",
+                "reason": "; ".join(rejection_reasons),
             }
 
             assignments.append(assignment)
@@ -407,4 +449,7 @@ if __name__ == "__main__":
         print(assignment)
 
     print("\n--- Greedy Processing Order ---")
-    greedy_match(donations, recipients, volunteers)
+    greedy_assignments = greedy_match(donations, recipients, volunteers)
+
+    for assignment in greedy_assignments:
+        print(assignment)
