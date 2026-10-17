@@ -58,8 +58,8 @@ Greedy follows the rule of soonest food to expire. Although it is not fully opti
 - Quantity priority
 
 # Metrics & FIFO vs Greedy comparison
-- 
--
+- FIFO processes donations in their original JSON list order, which represents arrival order. For each donation, it selects the first recipient-volunteer combination that passes the feasibility checks. Earlier donations receive access to capacity first.
+- Greedy sorts donations by earliest expiration, then larger quantity, then earlier ready time. Donations tied on all three criteria retain their input order. After sorting, it uses the same first-feasible matching procedure as FIFO. Its local goal is to prioritize food with less time before expiration; it does not guarantee the greatest total rescued quantity.
 -
 
 # Team contribution
