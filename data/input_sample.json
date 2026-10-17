@@ -2,55 +2,155 @@
   "donations": [
     {
       "donation_id": "D-1001",
-      "donor_name": "Hilton Cafe",
-      "food_type": "prepared_meals",
-      "quantity": 20,
+      "donor_name": "Normal Matching",
+      "food_type": "produce",
+      "quantity": 10,
       "expiry_time": 180,
-      "pickup_area": "Fullerton",
+      "pickup_area": "Scenario-01",
       "ready_time": 0
     },
     {
       "donation_id": "D-1002",
-      "donor_name": "Whole Foods",
+      "donor_name": "Duplicate Donation ID",
       "food_type": "produce",
-      "quantity": 20,
-      "expiry_time": 20,
-      "pickup_area": "Fullerton",
+      "quantity": 10,
+      "expiry_time": 180,
+      "pickup_area": "Scenario-02",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1002",
+      "donor_name": "Duplicate Donation ID",
+      "food_type": "produce",
+      "quantity": 10,
+      "expiry_time": 180,
+      "pickup_area": "Scenario-02",
       "ready_time": 0
     },
     {
       "donation_id": "D-1003",
-      "donor_name": "Local Bakery",
-      "food_type": "prepared_meals",
-      "quantity": 10,
-      "expiry_time": 240,
-      "pickup_area": "Fullerton",
-      "ready_time": 0
-    },
-    {
-      "donation_id": "D-1001",
-      "donor_name": "Duplicate ID Example",
+      "donor_name": "Duplicate Donation ID",
       "food_type": "produce",
-      "quantity": 15,
-      "expiry_time": 120,
-      "pickup_area": "Fullerton",
+      "quantity": 10,
+      "expiry_time": 180,
+      "pickup_area": "Scenario-02",
       "ready_time": 0
     },
     {
       "donation_id": "D-1004",
-      "donor_name": "Negative Quantity Example",
-      "food_type": "prepared_meals",
-      "quantity": -5,
-      "expiry_time": 180,
-      "pickup_area": "Fullerton",
+      "donor_name": "Expired Donation",
+      "food_type": "produce",
+      "quantity": 10,
+      "expiry_time": 0,
+      "pickup_area": "Scenario-03",
       "ready_time": 0
     },
     {
       "donation_id": "D-1005",
-      "donor_name": "Missing Quantity Example",
+      "donor_name": "Nearly Expired Donation",
       "food_type": "produce",
-      "expiry_time": 150,
-      "pickup_area": "Fullerton",
+      "quantity": 10,
+      "expiry_time": 5,
+      "pickup_area": "Scenario-04",
+      "ready_time": 2
+    },
+    {
+      "donation_id": "D-1006",
+      "donor_name": "Incompatible Food Type",
+      "food_type": "meat",
+      "quantity": 10,
+      "expiry_time": 180,
+      "pickup_area": "Scenario-05",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1007",
+      "donor_name": "Insufficient Recipient Capacity",
+      "food_type": "produce",
+      "quantity": 20,
+      "expiry_time": 180,
+      "pickup_area": "Scenario-06",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1008",
+      "donor_name": "Insufficient Vehicle Capacity",
+      "food_type": "produce",
+      "quantity": 30,
+      "expiry_time": 180,
+      "pickup_area": "Scenario-07",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1009",
+      "donor_name": "Volunteer Unavailable",
+      "food_type": "produce",
+      "quantity": 10,
+      "expiry_time": 100,
+      "pickup_area": "Scenario-08",
+      "ready_time": 60
+    },
+    {
+      "donation_id": "D-1010",
+      "donor_name": "Competing for Capacity",
+      "food_type": "produce",
+      "quantity": 10,
+      "expiry_time": 180,
+      "pickup_area": "Scenario-09",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1011",
+      "donor_name": "Competing for Capacity",
+      "food_type": "produce",
+      "quantity": 10,
+      "expiry_time": 180,
+      "pickup_area": "Scenario-09",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1012",
+      "donor_name": "FIFO vs Greedy",
+      "food_type": "produce",
+      "quantity": 20,
+      "expiry_time": 200,
+      "pickup_area": "Scenario-11",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1013",
+      "donor_name": "FIFO vs Greedy",
+      "food_type": "produce",
+      "quantity": 20,
+      "expiry_time": 20,
+      "pickup_area": "Scenario-11",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1014",
+      "donor_name": "Fairness and Deferral",
+      "food_type": "produce",
+      "quantity": 10,
+      "expiry_time": 500,
+      "pickup_area": "Scenario-12",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1015",
+      "donor_name": "Fairness and Deferral",
+      "food_type": "produce",
+      "quantity": 10,
+      "expiry_time": 20,
+      "pickup_area": "Scenario-12",
+      "ready_time": 0
+    },
+    {
+      "donation_id": "D-1016",
+      "donor_name": "Fairness and Deferral",
+      "food_type": "produce",
+      "quantity": 10,
+      "expiry_time": 30,
+      "pickup_area": "Scenario-12",
       "ready_time": 0
     }
   ],
@@ -59,59 +159,212 @@
       "recipient_id": "R-1001",
       "organization_name": "Community Shelter",
       "accepted_food_types": [
-        "prepared_meals",
-        "produce"
+        "produce",
+        "prepared_meals"
       ],
       "capacity": 50,
-      "area": "Fullerton",
+      "area": "Scenario-01",
       "closing_time": 300
     },
     {
       "recipient_id": "R-1002",
-      "organization_name": "Neighborhood Food Pantry",
+      "organization_name": "Community Shelter",
       "accepted_food_types": [
-        "produce"
+        "produce",
+        "prepared_meals"
       ],
-      "capacity": 40,
-      "area": "Fullerton",
-      "closing_time": 240
+      "capacity": 50,
+      "area": "Scenario-02",
+      "closing_time": 300
     },
     {
       "recipient_id": "R-1003",
-      "organization_name": "Campus Community Fridge",
+      "organization_name": "Community Shelter",
       "accepted_food_types": [
-        "prepared_meals",
-        "produce"
+        "produce",
+        "prepared_meals"
       ],
-      "capacity": 30,
-      "area": "Fullerton",
-      "closing_time": 180
+      "capacity": 50,
+      "area": "Scenario-03",
+      "closing_time": 300
+    },
+    {
+      "recipient_id": "R-1004",
+      "organization_name": "Community Shelter",
+      "accepted_food_types": [
+        "produce",
+        "prepared_meals"
+      ],
+      "capacity": 50,
+      "area": "Scenario-04",
+      "closing_time": 300
+    },
+    {
+      "recipient_id": "R-1005",
+      "organization_name": "Community Shelter",
+      "accepted_food_types": [
+        "produce",
+        "prepared_meals"
+      ],
+      "capacity": 50,
+      "area": "Scenario-05",
+      "closing_time": 300
+    },
+    {
+      "recipient_id": "R-1006",
+      "organization_name": "Community Shelter",
+      "accepted_food_types": [
+        "produce",
+        "prepared_meals"
+      ],
+      "capacity": 10,
+      "area": "Scenario-06",
+      "closing_time": 300
+    },
+    {
+      "recipient_id": "R-1007",
+      "organization_name": "Community Shelter",
+      "accepted_food_types": [
+        "produce",
+        "prepared_meals"
+      ],
+      "capacity": 50,
+      "area": "Scenario-07",
+      "closing_time": 300
+    },
+    {
+      "recipient_id": "R-1008",
+      "organization_name": "Community Shelter",
+      "accepted_food_types": [
+        "produce",
+        "prepared_meals"
+      ],
+      "capacity": 50,
+      "area": "Scenario-08",
+      "closing_time": 300
+    },
+    {
+      "recipient_id": "R-1009",
+      "organization_name": "Community Shelter",
+      "accepted_food_types": [
+        "produce",
+        "prepared_meals"
+      ],
+      "capacity": 10,
+      "area": "Scenario-09",
+      "closing_time": 300
+    },
+    {
+      "recipient_id": "R-1010",
+      "organization_name": "Community Shelter",
+      "accepted_food_types": [
+        "produce",
+        "prepared_meals"
+      ],
+      "capacity": 20,
+      "area": "Scenario-11",
+      "closing_time": 300
+    },
+    {
+      "recipient_id": "R-1011",
+      "organization_name": "Community Shelter",
+      "accepted_food_types": [
+        "produce",
+        "prepared_meals"
+      ],
+      "capacity": 20,
+      "area": "Scenario-12",
+      "closing_time": 300
     }
   ],
   "volunteers": [
     {
       "volunteer_id": "V-1001",
       "vehicle_capacity": 20,
-      "area": "Fullerton",
+      "area": "Scenario-01",
       "availability_start": 0,
       "availability_end": 300,
       "max_pickups": 3
     },
     {
       "volunteer_id": "V-1002",
-      "vehicle_capacity": 30,
-      "area": "Fullerton",
-      "availability_start": 10,
-      "availability_end": 240,
-      "max_pickups": 2
+      "vehicle_capacity": 20,
+      "area": "Scenario-02",
+      "availability_start": 0,
+      "availability_end": 300,
+      "max_pickups": 3
     },
     {
       "volunteer_id": "V-1003",
-      "vehicle_capacity": 15,
-      "area": "Fullerton",
+      "vehicle_capacity": 20,
+      "area": "Scenario-03",
       "availability_start": 0,
-      "availability_end": 180,
-      "max_pickups": 2
+      "availability_end": 300,
+      "max_pickups": 3
+    },
+    {
+      "volunteer_id": "V-1004",
+      "vehicle_capacity": 20,
+      "area": "Scenario-04",
+      "availability_start": 0,
+      "availability_end": 300,
+      "max_pickups": 3
+    },
+    {
+      "volunteer_id": "V-1005",
+      "vehicle_capacity": 20,
+      "area": "Scenario-05",
+      "availability_start": 0,
+      "availability_end": 300,
+      "max_pickups": 3
+    },
+    {
+      "volunteer_id": "V-1006",
+      "vehicle_capacity": 20,
+      "area": "Scenario-06",
+      "availability_start": 0,
+      "availability_end": 300,
+      "max_pickups": 3
+    },
+    {
+      "volunteer_id": "V-1007",
+      "vehicle_capacity": 20,
+      "area": "Scenario-07",
+      "availability_start": 0,
+      "availability_end": 300,
+      "max_pickups": 3
+    },
+    {
+      "volunteer_id": "V-1008",
+      "vehicle_capacity": 20,
+      "area": "Scenario-08",
+      "availability_start": 0,
+      "availability_end": 30,
+      "max_pickups": 3
+    },
+    {
+      "volunteer_id": "V-1009",
+      "vehicle_capacity": 20,
+      "area": "Scenario-09",
+      "availability_start": 0,
+      "availability_end": 300,
+      "max_pickups": 3
+    },
+    {
+      "volunteer_id": "V-1010",
+      "vehicle_capacity": 20,
+      "area": "Scenario-11",
+      "availability_start": 0,
+      "availability_end": 300,
+      "max_pickups": 3
+    },
+    {
+      "volunteer_id": "V-1011",
+      "vehicle_capacity": 20,
+      "area": "Scenario-12",
+      "availability_start": 0,
+      "availability_end": 300,
+      "max_pickups": 3
     }
   ]
 }
