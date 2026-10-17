@@ -550,8 +550,6 @@ if __name__ == "__main__":
     for metric, value in fifo_metrics.items():
         print(metric, ":", value)
 
-    greedy_assignments = greedy_match(donations, recipients, volunteers)
-
     print("\n--- Greedy Assignments ---")
     greedy_assignments = greedy_match(donations, recipients, volunteers)
     for assignment in greedy_assignments:
