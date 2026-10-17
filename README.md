@@ -1,7 +1,10 @@
 CPSC 335: Algorithms and Data Structures
 RescueRoute
 
-This is a python commandline project that matches time-sensitive surplus food donations to compatible recipients and volunteer drivers. It uses a fifo algorithm as well as a greedy algorithm to compare and make decision for all donations
+This is a python commandline project that matches time-sensitive surplus food donations to compatible recipients and volunteer drivers. It uses a fifo algorithm as well as a greedy algorithm to compare and make decision for all donations. 
+**This project is NOT approved for real food-handling, medical, emergency, or operational use.**
+
+
 
 ## Setup
 
