@@ -164,4 +164,33 @@ class TestStrategies(unittest.TestCase):
 
         self.assertEqual(status["D-u1"], "assigned")
         self.assertEqual(status["D-s"], "unassigned")
-        
+    def test_greedy_quantity_priority(self):
+        donations = [
+            make_donation(donation_id="D-1", quantity=5, expiry_time=100),
+            make_donation(donation_id="D-2", quantity=10, expiry_time=100)
+        ]
+
+        recipient = make_recipient(capacity=10)
+        volunteer = make_volunteer(max_pickups=2)
+
+        greedy = greedy_match(donations, [recipient], [volunteer])
+
+        self.assertEqual(greedy[0]["donation_id"], "D-2")
+        self.assertEqual(greedy[0]["status"], "assigned")
+        self.assertEqual(greedy[1]["donation_id"], "D-1")
+        self.assertEqual(greedy[1]["status"], "unassigned")
+    def test_greedy_ready_time_priority(self):
+        donations = [
+            make_donation(donation_id="D-1", expiry_time=100, ready_time=30),
+            make_donation(donation_id="D-2", expiry_time=100, ready_time=10)
+        ]
+
+        recipient = make_recipient(capacity=10)
+        volunteer = make_volunteer(max_pickups=2)
+
+        greedy = greedy_match(donations, [recipient], [volunteer])
+
+        self.assertEqual(greedy[0]["donation_id"], "D-2")
+        self.assertEqual(greedy[0]["status"], "assigned")
+        self.assertEqual(greedy[1]["donation_id"], "D-1")
+        self.assertEqual(greedy[1]["status"], "unassigned")
